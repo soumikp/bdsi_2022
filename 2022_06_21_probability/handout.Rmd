@@ -1,0 +1,180 @@
+---
+title: "Probability review: handout"
+output:
+  html_document
+---
+
+<style>
+body {
+text-align: justify;
+font-family: Helvetica;
+font-size: 16pt;
+}
+hr{
+height: 2px;
+background-color: #000000;
+border: none;
+}
+body .main-container {
+  max-width: 80%;
+}
+</style>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(fig.align='center', fig.width=10, fig.height=7)
+
+colourise <- function(x, color) {
+  if (knitr::is_latex_output()) {
+    sprintf("\\textcolor{%s}{%s}", color, x)
+  } else if (knitr::is_html_output()) {
+    sprintf("<span style='color: %s;'>%s</span>", color,
+      x)
+  } else x
+}
+
+librarian::shelf(tidyverse, ggplot2, here, readxl, GGally, forecast, patchwork, MLmetrics, lmtest)
+```
+
+
+## General Advice
+
+Although the R scripts written in these labs are relatively short, it is still important to follow some best practices that help make the code easier to read and modify.
+
+  - Organize the code in a clear, logical manner. Be sure that the script can be run from beginning to end, line-by-line, without errors.
+  
+  - Annotate the code with comments to make it easier to identify the purpose of specific sections.
+  
+  - Start out by defining the parameters (i.e., variables) that will be used in the script. Use variables as much as possible so that the code is easy to re-use in similar settings. 
+
+<hr>
+
+## Introduction
+
+Simulation allows for an intuitive way to understand the definition of probability as a proportion of times that an outcome of interest occurs if the random phenomenon could be repeated infinitely. With a programming language like R, it is possible to feasibly conduct simulations with enough replicates such that the proportion of occurrences with a particular outcome closely approximates the probability $p$. 
+
+<hr>
+
+## Notes
+
+In this section (click to expand), we introduce the basic elements of R programming required to conduct such simulations: the `sample()` command and `for` loop control structure. 
+
+<details>
+<summary>Click for notes on `sample()` and `for` loops</summary>
+### Random Sampling with `sample()`
+
+In a probability setting, it is not always the case that each outcome of an experiment is equally likely. The `sample( )` function has the generic structure
+
+```{r, eval = FALSE}
+sample(x, size = , replace = FALSE, prob = NULL)
+```
+
+where the `prob` argument allows for the probability of sampling each element in `x` to be specified as a vector. When `prob` is omitted, the function will sample each element with equal probability. 
+
+The following code simulates the outcome of tossing a biased coin ten times, where the probability of a heads is 0.6; a heads is represented by `1` and a tails is represented by `0` The first argument is the vector `(0, 1)`, and the `prob` argument is the vector `(0.4, 0.6)`; the order indicates that the first element (`0`) is to be sampled with probability 0.4 and the second element (`1`) is to be sampled with probability 0.6.
+
+```{r}
+#set the seed for a pseudo-random sample
+set.seed(2018)
+outcomes = sample(c(0, 1), size = 10, prob = c(0.4, 0.6), replace = TRUE)
+outcomes
+```
+
+### Using `sum ()`
+
+The `sum ()` function is used in the lab to return the sum of the outcomes vector, where outcomes are recorded as either `0` or `1`. For simplicity, the function was used in its most basic form:
+
+```{r}
+sum(outcomes)       #number of 1's (heads)
+10 - sum(outcomes)  #number of 0's (tails)
+```
+
+It is often convenient to combine the `sum()` function with logical operators.
+
+```{r}
+sum(outcomes == 1)  #number of 1's (heads)
+sum(outcomes == 0)  #number of 0's (tails)
+```
+
+This provides more flexibility and can make the code easier to parse quickly, such as for cases where there are more than two outcomes, or when more than two outcomes are of interest. For example, the following application of `sum()` identifies the number of rolls (out of twenty) of a fair six-sided that are either 1 or greater than 4.
+
+```{r}
+#set the seed for a pseudo-random sample
+set.seed(2018)
+dice.rolls = sample(1:6, size = 20, replace = TRUE)
+dice.rolls
+sum(dice.rolls == 1 | dice.rolls > 4)
+```
+
+Additionally, since logical operators work with text strings, it is possible to use them with `sum()` to return the number of heads if heads is represented by, for example, `H`.
+
+```{r}
+#set the seed for a pseudo-random sample
+set.seed(2018)
+outcomes = sample(c("T", "H"), size = 10, prob = c(0.4, 0.6), replace = TRUE)
+outcomes
+sum(outcomes == "H")  #number of heads
+```
+
+### `for` Loops
+
+A loop allows for a set of code to be repeated under a specific set of conditions; the `for` loop is one of the several types of loops available in R.
+
+A `for` loop has the basic structure ``for( counter ) \{ instructions \}`. The loop below will calculate the squares of the integers from 1 through 5.
+
+  - Prior to running the loop, an empty vector `squares` is created to store the results of the loop. This step is referred to as initialization.
+
+  - The counter consists of the index variable that keeps track of each iteration of the loop; the index is typically a letter like `i`, `j`, or `k`, but can be any sequence such as `ii`. The index variable is conceptually similar to the index of summation $k$ in sigma notation ($\sum_{k = 1}^n$). In the example below, the counter can be read as "for every $k$ in 1 through 5, repeat the following instructions..."
+  
+  - The instructions are enclosed within the pair of curly braces. For each iteration, the value $k^2$ is to be stored in the $k^{th}$ element of the vector `squares`. The empty vector `squares` was created prior to running the loop using `vector()`.
+  
+  - So, for the first iteration, R sets $k = 1$, calculates $1^2$, and fills in the first element of `squares` with the result. In the next iteration, $k = 2$... and this process repeats until $k = 5$ and $5^2$ is stored as the fifth element of `squares`.
+  
+  - After the loop is done, the vector `squares` is no longer empty and instead consists of the squares of the integers from 1 through 5: 1, 4, 9, 16, and 25.
+
+```{r}
+#create empty vector to store results (initialize)
+squares = vector("numeric", 5)
+#run the loop
+for(k in 1:5){
+  
+  squares[k] = k^2
+  
+}
+#print the results
+squares
+```
+
+Of course, the same result could be easily achieved without a `for` loop:
+
+```{r}
+(1:5)^2
+```
+
+The `for` loop is a useful tool when the set of instructions to be repeated is more complicated, such as in the coin tossing scenario from the lab. The loop from Question 2 is reproduced here for reference.
+
+  - The loop is set to run for every $k$ from 1 to the value of `number.replicate`, which has been previously defined as 50.
+  
+  - There are two vectors defined within the curly braces.
+  
+    - The first vector, `outcomes.replicate`, consists of the outcomes for the tosses in a single replicate (i.e., iteration of the loop). The number of tosses in a single experiment has been defined as 5. These values are produced from `sample()`. This vector's values are re-populated each time the loop is run.
+    
+    - The second vector, `outcomes`, is created by calculating the sum of `outcomes.replicate` for each iteration of the loop. Once the loop has run, `outcomes` is a record of the number of `1`'s that occurred for each iteration.
+    
+  - In the language of the coin tossing scenario: the loop starts by tossing 5 coins, counting how many heads occur, then recording that number as the first element of `outcomes`. Next, the loop tosses 5 coins again and records the number of heads in the second element of `outcomes`. The loop stops once it has repeated the experiment (of tossing 5 coins) 50 times.
+  
+    - The distinction between the `outcomes.replicate` vector and the `outcomes` vector, for each run of the loop, is that the `outcomes.replicate` vector stores the exact sequence of results while `outcomes` only records the number of heads. 
+    
+    - For this particular problem, the only information needed is the number of heads; thus, one can think of `outcomes` as summarizing the relevant information from the experiment. 
+
+```{r, eval = FALSE}
+for(k in 1:number.replicates){
+  
+  outcomes.replicate = sample(c(0, 1), size = number.tosses,
+                              prob = c(1 - prob.heads, prob.heads), replace = TRUE)
+  
+  outcomes[k] = sum(outcomes.replicate)
+  
+}
+```
+</details>
+<hr>

@@ -1,0 +1,11 @@
+name: Publish Document
+title:
+username:
+account: rpubs
+server: rpubs.com
+hostUrl: rpubs.com
+appId: https://api.rpubs.com/api/v1/document/915802/8c8bd650c3dc4970a93b172d644a78f4
+bundleId: https://api.rpubs.com/api/v1/document/915802/8c8bd650c3dc4970a93b172d644a78f4
+url: http://rpubs.com/soumikp/915802
+when: 1655507972.44508
+lastSyncTime: 1655507972.4451
