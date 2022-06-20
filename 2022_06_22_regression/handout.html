@@ -387,12 +387,11 @@ body .main-container {
 reviewing how to use <code>R</code> to analyse some real-life datasets.
 In order to do so effectively, please make sure you run the following
 code chunk</p>
-<pre class="r"><code>install.packages(&quot;devtools&quot;)
-devtools::install_github(&quot;OI-Biostat/oi_biostat_data&quot;)</code></pre>
+<pre class="r"><code>install.packages(&quot;librarian&quot;)
+librarian::shelf(tidyverse, patchwork, ggsci)</code></pre>
 <p>and then run</p>
-<pre class="r"><code>library(oibiostat)
-data(&quot;nhanes.samp.adult.500&quot;)
-data(&quot;prevend.samp&quot;)</code></pre>
+<pre class="r"><code>nhanes.samp.adult.500 &lt;- read_csv(&quot;https://raw.githubusercontent.com/soumikp/bdsi_2022/main/data/nhanes.samp.adult.500.csv&quot;)
+prevend.samp &lt;- read_csv(&quot;https://raw.githubusercontent.com/soumikp/bdsi_2022/main/data/prevend.samp.csv&quot;)</code></pre>
 <p>If your installation was not successful, you’ll get an error message.
 Feel free to email me (<a href="mailto:soumikp@umich.edu" class="email">soumikp@umich.edu</a>) if you have trouble!</p>
 <hr>
