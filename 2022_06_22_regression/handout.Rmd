@@ -1,0 +1,225 @@
+---
+title: "Linear Regression review: handout"
+output:
+  html_document
+---
+
+<style>
+body {
+text-align: justify;
+font-family: Helvetica;
+font-size: 16pt;
+}
+hr{
+height: 2px;
+background-color: #000000;
+border: none;
+}
+body .main-container {
+  max-width: 80%;
+}
+</style>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(fig.align='center', fig.width=10, fig.height=7)
+
+colourise <- function(x, color) {
+  if (knitr::is_latex_output()) {
+    sprintf("\\textcolor{%s}{%s}", color, x)
+  } else if (knitr::is_html_output()) {
+    sprintf("<span style='color: %s;'>%s</span>", color,
+      x)
+  } else x
+}
+
+librarian::shelf(tidyverse, ggplot2, here, readxl, GGally, forecast, patchwork, MLmetrics, lmtest, ggsci)
+```
+
+## Housekeeping
+
+The lectures have little active learning components where you will be reviewing how to use `R` to analyse some real-life datasets. In order to do so effectively, please make sure you run the following code chunk 
+```{r eval = FALSE}
+install.packages("devtools")
+devtools::install_github("OI-Biostat/oi_biostat_data")
+```
+and then run
+```{r eval = FALSE}
+library(oibiostat)
+data("nhanes.samp.adult.500")
+data("prevend.samp")
+```
+If your installation was not successful, you'll get an error message. Feel free to email me (soumikp@umich.edu) if you have trouble! 
+
+<hr>
+
+## Introduction
+
+The `lm()` function is used to fit linear models. It has the following generic structure:
+
+```{r, eval = FALSE}
+lm(y ~ x, data)
+```
+
+where the first argument specifies the variables used in the model; in this example, the model regresses a response variable `y` against an explanatory variable `x`. 
+
+The second argument is used only when the dataframe name is not already specified in the first argument. 
+
+Running the function creates an *object* (of class '`lm`') that contains several components, such as the model coefficients. 
+
+The model coefficients are directly displayed upon running `lm()`, while other components can be accessed through either the `$` notation or specific functions like `summary()`. 
+
+<hr>
+
+### The NHANES dataset
+
+The National Health and Nutrition Examination Survey (NHANES) consists of a set of surveys and measurements conducted by the US CDC to assess the health and nutritional status of adults and children in the United States. The following example uses data from a sample of 500 adults (individuals ages 21 and older) from the NHANES dataset - `nhanes.samp.adult.500`.
+
+The following example illustrates the linear relationship between BMI and age in the NHANES data, with age as a predictor of BMI. Adding a best-fitting line to these data using regression techniques would allow for prediction of an individual’s BMI based on their age. The linear model could also be used to investigate questions about the population-level relationship between BMI and age, since the data are a random sample from the population of adults in the United States. 
+
+<hr>
+
+### Example 1 of 1: `lm()` with NHANES
+<details><summary>Click here for more details</summary> 
+
+
+```{r}
+#load the data
+library(oibiostat)
+data("nhanes.samp.adult.500")
+```
+
+
+```{r}
+#fitting linear model
+lm(BMI ~ Age, data = nhanes.samp.adult.500)
+```
+
+<details><summary>The following example shows a scatterplot with a least squares regression line: Click here for more details</summary> 
+```{r eval = FALSE, fig.width = 8, fig.height = 6}
+nhanes.samp.adult.500 %>% 
+  select(c(Age, BMI)) %>%  ## select age and BMI
+  drop_na() %>% ## drop missing values
+  ggplot(aes(x = Age, y = BMI)) + 
+  geom_point(color = pal_aaas("default", alpha = 1)(9)[6]) + ## generate scatterplot
+  geom_smooth(method = lm, se = FALSE, color = pal_aaas("default", alpha = 1)(9)[4]) + ## add best-fitting least squares line
+  theme_bw() + 
+  xlab("Age (in years)") +
+  ylab("BMI") + 
+  labs(title = "Scatterplot of BMI and Age in NHANES data (n = 500)", 
+       subtitle = "Straight line is the best 'fitted' line.") ##pretty plot produced!
+```
+<center>
+```{r echo = FALSE, fig.width = 8, fig.height = 6}
+suppressMessages((nhanes.samp.adult.500 %>% 
+  select(c(Age, BMI)) %>%  ## select age and BMI
+  drop_na() %>% ## drop missing values
+  ggplot(aes(x = Age, y = BMI)) + 
+  geom_point(color = pal_aaas("default", alpha = 1)(9)[6]) + ## generate scatterplot
+  geom_smooth(method = lm, se = FALSE, color = pal_aaas("default", alpha = 1)(9)[4]) + ## add best-fitting least squares line
+  theme_bw() + 
+  xlab("Age (in years)") +
+  ylab("BMI") + 
+  labs(title = "Scatterplot of BMI and Age in NHANES data (n = 500)", 
+       subtitle = "Straight line is the best 'fitted' line."))) ##pretty plot produced!
+```
+</center></details>
+
+<details><summary>Next we consider the problem of extracting *residuals*  from a model fit: Click here for more details</summary> 
+```{r}
+#name the model object
+model.BMIvsAge = lm(BMI ~ Age, data = nhanes.samp.adult.500)
+
+#extract residuals with residuals()
+residuals = residuals(model.BMIvsAge)
+#alternatively... extract residuals with $residuals
+residuals = model.BMIvsAge$residuals
+```
+</details>
+
+<details><summary>The following example demonstrates extracting *predicted values* from the model of BMI versus age in `nhanes.samp.adult.500`: Click here for more details</summary> 
+```{r}
+#extract predicted values with predict()
+predicted = predict(model.BMIvsAge)
+
+#alternatively... extract predicted values with $fitted.values
+predicted = model.BMIvsAge$fitted.values
+```
+</details>
+
+<details><summary>Checking assumptions with residual plots: Click here for more details</summary> 
+
+There are four assumptions that must be met for a linear model to be considered reasonable: linearity, constant variability, independent observations, and normally distributed residuals. In a scatterplot, we plot the residuals and fitted values.
+
+```{r echo = FALSE, fig.width = 10, fig.height = 8}
+ggplot(data = NULL, 
+       aes(x = predicted, y = residuals)) + 
+  geom_point(color = pal_aaas("default", alpha = 1)(9)[6]) + 
+  geom_hline(yintercept = 0, 
+             linetype = "dashed",
+             size = 1,
+             color = pal_aaas("default", alpha = 1)(9)[4]) + 
+  theme_bw() + 
+  xlab("Predicted BMI") + 
+  ylab("Residual") + 
+  labs(title = "Scatterplot of predited BMI and residuals in NHANES data (n = 500)", 
+       subtitle = "Straight line denotes x-axis.")
+```
+
+`r colourise("When a linear model is a good fit for the data, the residuals should scatter around the horizontal line $y = 0$ with no apparent pattern. Does a linear model seem appropriate for these data? **Yes**", "red")`
+
+`r colourise("Does the variability of the residuals seem constant across the range of predicted RFFT scores? **Yes**", "red")`
+
+Next we consider a histogram of the residuals; we will compare the shape of the histogram with a normal density curve.
+```{r eval = FALSE, fig.width = 10, fig.height = 8}
+data = as_tibble(residuals) %>% rename(x = value)
+ggplot(data = data, aes(x)) + 
+  geom_histogram(aes(y = ..density..),
+                 fill = pal_aaas("default", alpha = 1)(9)[6]) + 
+  theme_bw() +
+  stat_function(fun = dnorm,
+                args = list(mean = mean(data$x),
+                            sd = sd(data$x)),
+                col = pal_aaas("default", alpha = 1)(9)[5],
+                size = 2) +
+  ylab("Density") +
+  xlab("Residuals")
+```
+```{r echo = FALSE, fig.width = 10, fig.height = 8}
+data = as_tibble(residuals) %>% rename(x = value)
+suppressMessages(ggplot(data = data, aes(x)) + 
+  geom_histogram(aes(y = ..density..),
+                 fill = pal_aaas("default", alpha = 1)(9)[6]) + 
+  theme_bw() +
+  stat_function(fun = dnorm,
+                args = list(mean = mean(data$x),
+                            sd = sd(data$x)),
+                col = pal_aaas("default", alpha = 1)(9)[5],
+                size = 2) +
+  ylab("Density") +
+  xlab("Residuals"))
+```
+`r colourise("Do the residuals appear to be normally distributed? **???**", "red")`
+
+Finally, we consider a **Q-Q plot** for the residuals:  the quantile-quantile plot is a graphical tool to help us assess if a set of data plausibly came from some theoretical distribution such as normal. *It’s just a visual check, not an air-tight proof, so it is somewhat subjective. But it allows us to see at-a-glance if our assumption is plausible, and if not, how the assumption is violated and what data points contribute to the violation.* A Q-Q plot is a scatterplot created by plotting two sets of quantiles against one another. If both sets of quantiles came from *similar* distribution, we should see the points forming a line that’s roughly straight. 
+```{r, fig.width = 10, fig.height = 8}
+data = as_tibble(residuals) %>% rename(x = value) 
+ggplot(data = data, 
+       aes(sample = x)) + 
+  stat_qq(color = pal_aaas("default", alpha = 1)(9)[6]) + 
+  stat_qq_line(color = pal_aaas("default", alpha = 1)(9)[4], 
+               linetype = "dashed",
+               size = 2) +
+  theme_bw() + 
+  ylab("Sample quantiles") + 
+  xlab("Theoretical quantiles") +
+  labs(title = "Normal Q-Q plot of residuals in NHANES data (n = 500)")
+```
+`r colourise("Now do the residuals appear to be normally distributed? **???**", "red")`
+</details>
+
+
+<details><summary>Obtaining model summary of coefficients: Click here for more details</summary> 
+```{r}
+summary(model.BMIvsAge)
+```
+</details>

@@ -1,7 +1,7 @@
 ---
 title: "Probability review"
-author: "Big Data Summer Institute 2022"
-date: "Soumik Purkayastha [https://soumikp.github.io]<br><br>[Press 'k' on your keyboard!]"
+author: "Big Data Summer Institute 2022<br><br>June 21, 2022<br><br>"
+date: "Soumik Purkayastha<br>[https://soumikp.github.io]<br><br><br><br>[Press 'k' on your keyboard and use arrows/space bar to navigate!]"
 output:
   slidy_presentation
 ---
@@ -43,14 +43,20 @@ librarian::shelf(tidyverse, ggplot2, here, readxl, GGally, forecast, patchwork, 
 
 At the end of this review, you will be able to 
 
-1. Recall basic notions of probability (through counting-based examples).
-2. Understand formal foundations of probability.
-3. Link random variables to concepts of probability. 
-4. Analyse basic properties of some common random variables
+  1. Recall basic notions of probability (through counting-based examples).
+      - Coding skill: recall the basic framework for estimating probability through simulated repetitions of an experiment. 
+  
+  2. Understand notions of conditional probability.
+      - Coding skill: implement control structures by introducing the use of `if` statements for counting successes and for simulating populations based on conditional probabilities.
+      
+  3. Link random variables to concepts of probability. 
+      - Coding skill: generate random samples from a given distribution and use Monte Carlo methods to estimate distribution parameters.
+  
+  4. Analyse basic properties of some common random variables.
+      - Coding skill: explore of the relationships between prevalence, sensitivity, specificity and positive predictive value through a real-world example.
+  
 
-```{r, echo=FALSE, fig.align='center', fig.width=10, fig.height=7}
-knitr::include_graphics('./figures/r.png')
-```
+<center>![](./figures/r.png)<center>
 
 
 # 1A: Basic concepts of probability: Introduction 
@@ -434,7 +440,7 @@ $A = \{\text{a woman has breast cancer}\}$, and $B = \{\text{a mammogram is posi
 
 
 
-# Lab 2D: Bayes' theorem through an example: defining events in diagnostic testing
+# Lab 2D: Bayes' theorem through an example: Defining events in diagnostic testing
 
 ::: columns
 
@@ -827,3 +833,7 @@ d) Consider a community of 1,000 families. What is the probability that between 
     
       
    
+# $\infty$   
+```{r, echo=FALSE, fig.align="center", fig.height= 18, fig.width=24}
+knitr::include_graphics('./figures/taf.png')
+```   
