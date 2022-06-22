@@ -7,7 +7,7 @@ output:
 ---
 
 
-# 0: Learning objectives
+# Learning objectives
 
 <style>
 body {
@@ -43,14 +43,14 @@ librarian::shelf(tidyverse, ggplot2, here, readxl, GGally, forecast, patchwork, 
 
 At the end of this review, you will be able to 
 
-  1. Recall basic notions of probability (through counting-based examples).
-      - Coding skill: recall the basic framework for estimating probability through simulated repetitions of an experiment. 
+  1. Recall basic notions of probability 
+      - Coding skill: estimating probabilities through simulated repetitions of an experiment. 
   
   2. Understand notions of conditional probability.
-      - Coding skill: implement control structures by introducing the use of `if` statements for counting successes and for simulating populations based on conditional probabilities.
+      - Coding skill: implementing control structures through use of `if` statements and simulating populations based on conditional probabilities.
       
   3. Link random variables to concepts of probability. 
-      - Coding skill: generate random samples from a given distribution and use Monte Carlo methods to estimate distribution parameters.
+      - Coding skill: generating random samples from a given distribution and using Monte Carlo methods to estimate distribution parameters.
   
   4. Analyse basic properties of some common random variables.
       - Coding skill: explore of the relationships between prevalence, sensitivity, specificity and positive predictive value through a real-world example.
@@ -59,7 +59,7 @@ At the end of this review, you will be able to
 <center>![](./figures/r.png)<center>
 
 
-# 1A: Basic concepts of probability: Introduction 
+# 1A: Introduction 
 
 People often colloquially refer to probability...
 
@@ -67,9 +67,9 @@ People often colloquially refer to probability...
 - "What's the chance of rain tomorrow?"
 - "What is the chance that a patient responds to a new therapy?"
 
-**Formalizing concepts and terminology around probability is essential for better understanding probability.**
+**Formalizing concepts and terminology around probability is essential for improved understanding.**
 
-# 1B: Basic concepts of probability: Random experiments
+# 1B: Random experiments
 
 - A `r colourise("**random experiment**", "red")` is an action or process that leads to one of several possible outcomes.
     - `r colourise("Rolling two dice simultaneously", "forestgreen")`.
@@ -84,7 +84,7 @@ People often colloquially refer to probability...
     - `r colourise("The sum after rolling two dice is 7", "forestgreen")`.
     - `r colourise("22 of 30 patients in a study have a good response to a therapy", "blue")`.
 
-# 1C: Basic concepts of probability: Formalising our notion of probability (somewhat)
+# 1C: Formalising our notion of probability (somewhat)
 
 `r colourise("**Probability**", "red")` is used to assign a level of uncertainty to the outcomes of phenomena that either happen randomly (e.g. `r colourise("rolling dice", "forestgreen")`) or appear random because of a lack of understanding about exactly how the phenomenon occurs (e.g., `r colourise("patient response to medical treatment", "blue")`). 
 
@@ -119,9 +119,7 @@ data.frame(X, Y) %>%
   theme_bw() 
 ```
 
-# 1D: Basic concepts of probability: Back to events and outcomes!
-
-#### Disjoint events
+# 1D: Disjoint events
 
 Two events or outcomes are called disjoint or mutually exclusive if they cannot both happen at the same time. 
 
@@ -131,17 +129,21 @@ If $A$ and $B$ represent two disjoint events, then the probability that either o
 knitr::include_graphics('./figures/disjointEvents.png')
 ```
 
+- `r colourise("$A:$ rolling a number less than three.", "blue")`
+
+- `r colourise("$B:$ rolling an even number more than two.", "green")`
+
+- `r colourise("$D:$ rolling a two or a three", "orange")`
+
 <center>
 
-$A:$ rolling a number less than three.
-
-$B:$ rolling an even number more than two.
+`r colourise("A and B are disjoint; B and D are disjoint but ", "black")` `r colourise("A and D are not.", "red")` 
 
 `r colourise("What is $P(A \\cup B)$?", "red")`
 
 </center>
 
-# 1E: Basic concepts of probability:  Addition rule for disjoint outcomes and inclusion-exclusion principle.
+# 1E: Addition rule for disjoint outcomes and inclusion-exclusion principle.
 
 If there are $k$ disjoint events $A_1, A_2, \ldots, A_k$, then  the probability that at least one of these outcomes will occur is
 
@@ -167,10 +169,10 @@ Let $A$:= drawing a diamond and $B$:= drawing a face card. What is $P(A \cup B)?
 Thus, for two events $A$ and $B$, the probability that either occurs is
 
 $$P(A \cup  B) = P(A) + P(B) - P(A \cap B),$$
-where the ‘cup’ $\cup$ symbol denotes the union of two events and the ‘cap’ $\cap$ symbol denotes the intersection of two events.
+where the ‘cup’ $\cup$ symbol denotes the union of two events and the ‘cap’ $\cap$ symbol denotes the intersection of two events. `r colourise("This is the general addition rule.", "red")`
 </center>
 
-# 1F: Basic concepts of probability: Complement of an event.
+# 1F: Complement of an event.
 
 ```{r, echo=FALSE, fig.align='center', fig.width=12, fig.height=9}
 knitr::include_graphics('./figures/complementOfD.png')
@@ -189,7 +191,7 @@ $D$ and $D^C$ are related in the following probabilistic sense:
 `r colourise("$P(D) + P(D^C) = 1$.", "red")`  
 </center>
 
-# 1H: Basic concepts of probability: Independence
+# 1H: Independence
 <center>
 
 
@@ -208,7 +210,7 @@ knitr::include_graphics('./figures/indepForRollingTwo1s.png')
 
 # Lab 1: Basic concepts of probability
 
-Notes for review may be found [here](https://rpubs.com/soumikp/bdsi22ProbNotes).
+Notes for review may be found [here](https://rpubs.com/soumikp/bdsi2022ProbHandout).
 
 **Question: Suppose that a biased coin is tossed 5 times; the coin is weighted such that the probability of obtaining a heads is 0.6. What is the probability of obtaining exactly 3 heads?**
 
@@ -367,11 +369,11 @@ for(k in 1:number.replicates){
     `r colourise("The (more reliable) estimate of the probability is = 0.3443.", "red")`
   </details>
 </details>
-<hr>
 
-# 2A: Conditional probability: Intuition
 
-Consider height in the US population.
+# 2: Conditional probability and independence
+
+>- `r colourise("$P(A|B)$", "red")`: conditional probability of an event $A$, given a second event $B$, is the probability of $A$ happening, knowing that the event $B$ has happened. <hr> Consider height in the US population.
 
 >- `r colourise("What is the probability that a randomly selected male in the population is taller than 6 feet, 4 inches?", "red")`
 
@@ -379,9 +381,9 @@ Consider height in the US population.
 
 >- `r colourise("Does this change the probability that the individual is taller than 6 feet, 4 inches?", "green")`.
 
-<hr>
+>- $A:$ randomly selected male in the population is taller than 6 feet, 4 inches, and $B$: randomly selected male is a professional basketball player. 
 
->- The conditional probability of an event $A$, given a second event $B$, is the probability of $B$ happening, knowing that the event $B$ has happened. Denoted by `r colourise("$P(A|B)$", "red")`.
+>- Marginal probabilities: $P(A)$ or $P(B)$; joint probability: $P(A \cap B)$. `r colourise("**We want $P(A|B)$**", "green")` <hr>
 
 >- Example: Toss a fair coin three times. Let $A$ be the event that exactly two heads occur, and $B$ the event that at least two heads occur. 
 
@@ -391,19 +393,11 @@ Consider height in the US population.
 
 >- Outcomes associated with event $A:  \{HHT, HTH, THH\}$.
 
->- $P(A|B) = 3/4.$
+>- $P(A|B) = 3/4.$ <hr>
 
-# 2B: Conditional probability: Formal defintion
+>- We must ensure the event we are conditioning on is not an impossible event, i.e., $P(B) \neq 0$. We define conditional probability of $A$ conditioned on $B$ as follows: $$P(A|B) = \frac{P(A \cap B)}{P(B)}.$$ <hr>
 
-We must ensure the event we are conditioning on is not an impossible event, i.e., $P(B) \neq 0$. We define conditional probability of $A$ conditioned on $B$ as follows: 
-
-$$P(A|B) = \frac{P(A \cap B)}{P(B)}.$$
-
-<hr>
-
-Link with independence: if $P(A|B) = P(A)$, then $A$ and $B$ are independent. 
-
-`r colourise("Knowing whether $B$ happened or not offers no information about whether $A$ occurred.", "red")`
+>- Link with independence: if $P(A|B) = P(A)$, then $A$ and $B$ are independent. `r colourise("Knowing whether $B$ happened or not offers no information about whether $A$ occurred.", "red")`
 
 
 # Lab 2A: Bayes' theorem through an example: Motivating problem
@@ -411,26 +405,34 @@ Link with independence: if $P(A|B) = P(A)$, then $A$ and $B$ are independent.
 
 >- `r colourise("Screening is looking for signs of disease, such as breast cancer, before a person has symptoms. ", "red")` The goal of screening tests is to find cancer at an early stage when it can be treated and may be cured. 
 
->- Scientists are trying to better understand which people are more likely to get certain types of cancer. For example, they look at the person's age, their family history, and certain exposures during their lifetime. This information helps doctors recommend who should be screened for cancer, which screening tests should be used, and how often the tests should be done. 
+>- Scientists are trying to better understand which people are more likely to get certain types of cancer. 
+
+>- For example, they look at the person's age, their family history, and certain exposures during their lifetime. This information helps doctors recommend who should be screened for cancer, which screening tests should be used, and how often the tests should be done. 
 
 >- Mammography is the most common screening test. An important clinical question is: `r colourise("What are the chances that a woman with an abnormal mammogram has breast cancer?", "red")` 
 
->- For clinicians, the question above may be reformulated: `r colourise("what is the conditional probability that a woman has breast cancer, given that her mammogram is abnormal?", "red")` This conditional probability is called the **positive predictive value (PPV)** of a mammogram. More concisely, if 
-$A = \{\text{a woman has breast cancer}\}$, and $B = \{\text{a mammogram is positive}\}$, the PPV of a mammogram is $P(A|B)$.
+>- For clinicians, the question above may be reformulated: `r colourise("what is the conditional probability that a woman has breast cancer, given that her mammogram is abnormal?", "red")` 
+
+>- This conditional probability is called the **positive predictive value (PPV)** of a mammogram. 
+
+>- More concisely, if 
+$$A = \{\text{a woman has breast cancer}\},$$ and $$B = \{\text{a mammogram is positive}\},$$ the PPV of a mammogram is $P(A|B)$.
 
 >- `r colourise("Learning objective: use our understanding of **conditional probability** and learn more about **Bayes' theorem** to calculate the PPV of a mammogram.", "blue")`
 
 # Lab 2B: Bayes' theorem through an example: Formulating the problem
 
->- The characteristics of a mammogram (and other diagnostic tests) are given with the reverse conditional probabilities — the probability that the mammogram correctly returns a positive result if a woman has breast cancer (i.e., $P(B|A)$), as well as the probability that the mammogram correctly returns a negative result if a woman does not have breast cancer (i.e., $P(B^C|A^C)$). 
+>- The characteristics of a mammogram (and other diagnostic tests) are given with the reverse conditional probabilities. 
+
+>- The probability that the mammogram correctly returns a positive result if a woman has breast cancer (i.e., $P(B|A)$), 
+
+>- The probability that the mammogram correctly returns a negative result if a woman does not have breast cancer (i.e., $P(B^C|A^C)$). 
 
 >- We will assume there is (usually historical) evidence that tells us what the marginal probability of disease (i.e., $P(A)$) is. 
 
 >- `r colourise("**The problem: Given the probabilities $P(B|A)$ and $P(B^C|A^C)$, as well as the marginal probability of disease $P(A)$, how can the positive predictive value $P(A|B)$ be calculated?**", "red")`
 
->- There are several possible strategies for approaching this type of problem; we will focus on `r colourise("using a purely algebraic approach using Bayes’ Theorem.", "blue")`
-
-# Lab 2C: Bayes' theorem through an example: Bayes' theorem statement
+>- There are several possible strategies for approaching this type of problem; we will focus on `r colourise("using a purely algebraic approach using Bayes’ Theorem.", "blue")` <hr>
 
 >- The simplest form of Bayes' theorem states $$P(A|B) = \frac{P(B|A) \times P(A)}{P(B)}.$$
 
@@ -440,7 +442,7 @@ $A = \{\text{a woman has breast cancer}\}$, and $B = \{\text{a mammogram is posi
 
 
 
-# Lab 2D: Bayes' theorem through an example: Defining events in diagnostic testing
+# Lab 2C: Bayes' theorem through an example: Defining events in diagnostic testing
 
 ::: columns
 
@@ -459,23 +461,23 @@ $A = \{\text{a woman has breast cancer}\}$, and $B = \{\text{a mammogram is posi
 :::: {.column width=50%}
 - Based on the quantities above, we derive characteristics of a diagnostic test.
     
-    -`r colourise("Sensitivity = $P(B|A)$", "brown")`
+    -`r colourise("**Sensitivity = $P(B|A)$**", "brown")`
     
-    -`r colourise("Specificity = $P(B^{C} | A^C)$", "purple")`
+    -`r colourise("**Specificity = $P(B^{C} | A^C)$**", "purple")`
 ::::
 
 :::
 
->- Want to find $PPV = P(A|B)$
+>- Want to find `r colourise("**$PPV = P(A|B)$**", "red")`
 
->- Bayes' theorem: Assuming we know `r colourise("prevalence = $P(A)$", "green")`, we can express $$PPV = P(A|B) = \frac{P(B|A)P(A)}{P(B|A)P(A) + P(B|A^C)P(A^C)}$$
+>- Bayes' theorem: Assuming we know `r colourise("**prevalence = $P(A)$**", "green")`, we can express $$PPV = P(A|B) = \frac{P(B|A)P(A)}{P(B|A)P(A) + P(B|A^C)P(A^C)}$$
 
 >- In terms of the characteristic quantities defined above, we can write 
 ```{r, echo=FALSE}
-   knitr::include_graphics('./figures/ppv formula.jpeg')
+   knitr::include_graphics('./figures/ppv formula.jpg')
 ```
 
-# Lab 2E: Bayes' theorem through an example: Calculating PPV using Bayes' theorem
+# Lab 2D: Bayes' theorem through an example: Calculating PPV using Bayes' theorem
 
 ## Exercise 1 of 1
 Using `R` as a calculator: one advantage `R` has over a standard hand calculator is the ability to easily store values as named variables. This can make numerical computations like the calculation of positive predictive value much less error-prone. Using a short script like the following to do the computation, rather than directly entering numbers into a calculator, is more efficient.  **We focus on the relationships between prevalence, sensitivity, specificity, positive predictive value, and negative predictive value.**
@@ -523,7 +525,7 @@ Suppose $X$ is the number of heads in 3 tosses of a fair coin.
 
 <center>![](./figures/coinToss.png)<center>
 
-# 3B: Distributions of random variables: Distribution of a discrete random variable
+# 3B: Distribution of a discrete random variable
 
 The distribution of a discrete random variable is the collection of its values and the probabilities associated with those values.
 
@@ -556,7 +558,7 @@ ggplot(team_outcomes_regulation,
 
 `r colourise("Distributions of random variables that arise in science can be more complex. We will learn more about this soon!", "red")`
 
-# 3C: Distributions of random variables: Expectation and variance
+# 3C: Expectation and variance
 
 If $X$ has outcomes $x_1$, ..., $x_k$ with probabilities $P(X=x_1)$, ..., $P(X=x_k)$, the `r colourise("expected value of $X$", "red")` is the sum of each outcome multiplied by its corresponding probability:
 \[E(X) 	= x_1 P(X=x_1) + \cdots + x_k P(X=x_k) = \sum_{i=1}^{k}x_iP(X=x_i)\]
@@ -595,9 +597,9 @@ Click here for answer.
     \end{align}
 </details>
 
-# 3D: Distributions of random variables: Binomial random variables
+# 3D: Binomial random variables
 
-One specific type of discrete random variable is a binomial random variable.
+One specific type of discrete random variable is a binomial random variable. 
 
 $X$ is a binomial random variable if it represents the number of successes in $n$ independent replications of an experiment where
 
@@ -606,11 +608,9 @@ $X$ is a binomial random variable if it represents the number of successes in $n
   
 A binomial random variable takes on values $0, 1, 2, \dots, n$.
 
-The number of heads in 3 tosses of a fair coin is a binomial random variable with parameters $n = 3$ and $p = 0.5$.
-
 <hr>
 
-**The Binomial Coefficient**
+<details><summary>Click here for details on binomial coefficient</summary>**The Binomial Coefficient**
 
 $\binom{n}{x}$ is the number of ways to choose $x$ items
 from a set of size $n$, where the order of the choice is ignored.
@@ -625,11 +625,9 @@ Mathematically,
 
 - For any integer $m$, $m! = (m)(m-1)(m-2)\cdots(1)$
 
-<hr>
+</details>   <hr>
 
-**Formula for the binomial distribution**
-
-Let $x$ = number of successes in $n$ trials 
+Formulation: Let $X$ be random variable modeling the number of successes in $n$ trials 
 \begin{footnotesize}
 \[P(x \,\,\text{successes}) = \binom{\text{\# of trials}} 
    {\text{\# of successes}} 
@@ -643,7 +641,7 @@ Let $x$ = number of successes in $n$ trials
 
 - $p$ = probability of success 
 
-Shorthand notation: $X\sim \text{Bin}(n,p)$
+Shorthand notation: $X\sim \text{Bin}(n,p).$ The number of heads in 3 tosses of a fair coin is a binomial random variable with parameters $n = 3$ and $p = 0.5$.
 
 <hr>
 
@@ -657,7 +655,7 @@ For a binomial distribution with parameters $n$ and $p$, it can be shown that:
 
 <hr>
 
-**Calculating binomial probabilities in `R`**
+<details><summary>Click here for details on **calculating binomial probabilities in `R`**</summary>
 	
 The function `dbinom()` is used to calculate $P(X = k)$.
 
@@ -668,11 +666,11 @@ The function `pbinom()` is used to calculate $P(X \leq k)$ or $P(X > k)$.
   - `pbinom(k, n, p)`: $P(X \leq k)$
   - `pbinom(k, n, p, lower.tail = FALSE)`: $P(X > k)$
 
-The function `rbinom()` is used to generate random samples from $Bin(n, p)$ distribution. [will be used for simulation studies!]
+The function `rbinom()` is used to generate random samples from $Bin(n, p)$ distribution. [will be used for simulation studies!]</details>
 
 
 
-# 3E: Distributions of random variables: Continuous random variables 
+# 3E: Continuous random variables 
 
 A discrete random variable takes on a finite number of values.
 
@@ -688,7 +686,12 @@ A continuous random variable can take on any real value in an interval.
 
 A general distinction to keep in mind: discrete random variables are **counted**, but continuous random variables are **measured**.
 
-# 3F: Distributions of random variables: Probability density functions
+>-    
+```{r, echo=FALSE, fig.align='center', fig.width=12, fig.height=12}
+knitr::include_graphics('./figures/fdicHistograms.png')
+```
+
+# 3F: Probability density functions
 
 Recall: for a discrete random variable $X$, we assign probabilities to each of the values that $X$ can take. This assignment yields a **probability mass function** (pmf): input a value $x$ and get $P(X = x)$ as output. 
 
@@ -708,7 +711,7 @@ When working with continuous random variables, probability is found for interval
   
   - Thus, $P(a < X < b)$ is equivalent to $P(a \leq X \leq b)$.
   
-# 3G: Distributions of random variables: Normal distribution
+# 3G: Normal distribution
 
 >- Among the many distributions seen in practice, one is by far the most common: the normal distribution, which has the shape of a symmetric, unimodal bell curve. 
 
@@ -733,10 +736,13 @@ x %>%
   xlab("x") + 
   ylab("PDF(x)") + 
   labs(title = "Comparing normal density curves with different mean/SD values", 
-       subtitle = "Red curve corresponds to density of N(0, 1); blue curve corresponds to density of N(5, 0.5).")
+       subtitle = "Red curve corresponds to density of N(0, 1); blue curve corresponds to density of N(5, 0.5).") + 
+  theme(title = element_text(face = "bold", size =14))
 ```
 
-# 3H: Distributions of random variables: Calculating normal probabilities using `R`
+>- Density of $N(\mu, \sigma)$: the mean and standard deviation parameters provide enough information to characterise the density function: $$f(x) = \frac{\exp{\left[-\frac{(x-\mu)}{\sigma}\right]^2}}{\sqrt{2\pi\sigma^2}}, \ x \in \mathrm{R}.$$
+
+# 3H: Calculating normal probabilities using `R`
 
 - **Question: What is the percentile rank for a student who scores an 1800 on the SAT for a year in which the scores are N(1500,300)?** $100 \times P(X \leq 1800)$ where $X \sim N(1500, 300)$
 
